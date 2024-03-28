@@ -1,5 +1,6 @@
 package com.model2.mvc.web.product;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -157,5 +158,26 @@ public class ProductRestController {
 		return msg;
 	}
 	
-	// product String deleteProduct()
+	@PostMapping("/json/deleteProduct")
+	public Message deleteProduct(@RequestBody Product product, HttpServletRequest request) throws Exception{
+		
+		System.out.println("path :: " + request.getServletContext().getRealPath("/images/uploadFiles") + "\\" + product.getFileName());
+		File oldFile = new File( request.getServletContext().getRealPath("/images/uploadFiles") + "\\" + product.getFileName() );
+		if (oldFile.exists()) {
+			System.out.println("image file을 찾았습니다.");
+			boolean b = oldFile.delete();  // 상품 제거 시 image file도 같이 삭제...
+			if( !b) {
+				System.out.println("image file 삭제에 실패...");
+				return new Message("fail");
+			} else {
+				int result = service.deleteProduct( product.getProdNo());
+				if(result != 1) 
+					return new Message("상품 삭제에 실패... :: DB error");
+				else
+		 			return new Message("ok");
+			}
+		} else {
+			return new Message("image file을 찾지 못했습니다...");
+		}
+	}
 }

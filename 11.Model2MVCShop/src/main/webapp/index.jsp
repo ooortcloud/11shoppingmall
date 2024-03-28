@@ -91,7 +91,14 @@
    	<!-- ToolBar End /////////////////////////////////////-->
    	
 	<!-- mainPage Start /////////////////////////////////////-->
-	<jsp:include page="/layout/mainContents.jsp" />
+	<jsp:include page="/product/recommendContents.jsp" />
+	<div class="container">
+		<div class="page-header">
+		  <h1><span class="glyphicon glyphicon-bullhorn" aria-hidden="true"></span>&nbsp;최신 상품<small>&nbsp;&nbsp;현재 새롭게 등록된 아이템들이에요</small></h1>
+		</div>
+	</div>
+	
+	<jsp:include page="/product/mainContents.jsp" />
    	<!-- mainPage End /////////////////////////////////////-->
 
 </body>

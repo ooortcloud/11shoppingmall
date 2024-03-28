@@ -56,94 +56,56 @@
 	<jsp:include page="/layout/toolbar.jsp" />
    	<!-- ToolBar End /////////////////////////////////////-->
 
+<div class="container">
 <form name="detailForm" method="post">
 
 <div class="page-header">
   <h1>상품 상세 조회</h1>
 </div>
 
-<table class="table" width="100%" border="0" cellspacing="0" cellpadding="0"	style="margin-top: 13px;">
-	<tr>
-		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
-	</tr>
-	<tr>
-		<td width="104" class="ct_write">
-			상품번호 <img src="/images/ct_icon_red.gif" width="3" height="3" align="absmiddle"/>
-		</td>
-		<td bgcolor="D6D6D6" width="1"></td>
-		<td class="ct_write01">
-			<table width="100%" border="0" cellspacing="0" cellpadding="0">
-				<tr>
-					<td width="105">${requestScope.product.prodNo }</td>
-				</tr>
-			</table>
-		</td>
-	</tr>
-	<tr>
-		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
-	</tr>
-	<tr>
-		<td width="104" class="ct_write">
-			상품명 <img src="/images/ct_icon_red.gif" width="3" height="3" align="absmiddle"/>
-		</td>
-		<td bgcolor="D6D6D6" width="1"></td>
-		<td class="ct_write01">${product.prodName }</td>
-	</tr>
-	<tr>
-		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
-	</tr>
-	<tr>
-		<td width="104" class="ct_write">
-			상품이미지 <img 	src="/images/ct_icon_red.gif" width="3" height="3" align="absmiddle"/>
-		</td>
-		<td bgcolor="D6D6D6" width="1"></td>
-		<td class="ct_write01">
-			<!-- style을 활용하여 이미지의 비율을 유지하면서 최대 높이와 너비를 지정함 -->
-			<img src = "/images/uploadFiles/${product.fileName }" style="max-width: 400px; max-height: 300px;"/>  
-		</td>
-	</tr>
-	<tr>
-		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
-	</tr>
-	<tr>
-		<td width="104" class="ct_write">
-			상품상세정보 <img src="/images/ct_icon_red.gif" width="3" height="3" align="absmiddle"/>
-		</td>
-		<td bgcolor="D6D6D6" width="1"></td>
-		<td class="ct_write01">${product.prodDetail }</td>
-	</tr>
-	<tr>
-		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
-	</tr>
-	<tr>
-		<td width="104" class="ct_write">제조일자</td>
-		<td bgcolor="D6D6D6" width="1"></td>
-		<td class="ct_write01">${product.manuDate }</td>
-	</tr>
-	<tr>
-		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
-	</tr>
-	<tr>
-		<td width="104" class="ct_write">가격</td>
-		<td bgcolor="D6D6D6" width="1"></td>
-		<td class="ct_write01">${product.price }</td>
-	</tr>
-	<tr>
-		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
-	</tr>
-	<tr>
-		<td width="104" class="ct_write">등록일자</td>
-		<td bgcolor="D6D6D6" width="1"></td>
-		<td class="ct_write01">${product.regDate }</td>
-	</tr>
-	<tr>
-		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
-	</tr>
+<table class="table">
+	<tbody>
+		<tr>
+			<th scope="row">상품번호</th>
+			<td>${product.prodNo }</td>
+		</tr>
+		<tr>
+			<th scope="row">상품명</th>
+			<!-- object scope 종류 :: pageScope < requestScope < sessionScope < applicationScope -->
+			<td>${requestScope.product.prodName }</td>
+		</tr>
+		<tr>
+			<th scope="row">상품이미지</th>
+			<td>
+				<img src="/images/uploadFiles/${product.fileName }" style="max-width : 400px; max-height : 300px;" align="absmiddle" />
+			</td>
+		</tr>
+		<tr>
+			<th scope="row">상품상세정보</th>
+			<td>${product.prodDetail }</td>
+		</tr>
+		<tr>
+			<th scope="row">제조일자</th>
+			<td>${product.manuDate }</td>
+		</tr>
+		<tr>
+			<th scope="row">가격</th>
+			<td>${product.price }</td>
+		</tr>
+		<tr>
+			<th scope="row">등록일자</th>
+			<td> ${product.regDate }</td>
+		</tr>
+	</tbody>
 </table>
 
-<button type="button" class="btn btn-default">확인</button>
-
+	<div class="row">
+		<div class="col-sm-offset-11">
+			<button type="button" class="btn btn-default">확인</button>
+		</div>
+	</div>	
+	
 </form>
-
+</div> <!-- container end -->
 </body>
 </html>

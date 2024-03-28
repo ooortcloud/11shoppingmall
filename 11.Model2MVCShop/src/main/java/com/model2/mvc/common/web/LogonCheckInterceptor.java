@@ -75,6 +75,14 @@ public class LogonCheckInterceptor extends HandlerInterceptorAdapter {
 					return false;
 				}
 			}
+			
+			if(uri.indexOf("updateProduct") != -1 ) {
+				
+				if( !user.getUserId().equals("admin") ) {
+					System.out.println("해당 유저에게 상품 수정 권한은 없습니다...");
+					return false;
+				}
+			}
 			/////////////////// security 문제 방어 end /////////////////////
 			
 			System.out.println("[ 현재 로그인 중인 회원입니다. ]");

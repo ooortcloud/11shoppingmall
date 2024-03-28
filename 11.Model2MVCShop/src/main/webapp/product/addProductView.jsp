@@ -98,16 +98,18 @@ $( function() {
 	<jsp:include page="/layout/toolbar.jsp" />
    	<!-- ToolBar End /////////////////////////////////////-->
 
+
+
 <div class="container">
+		<div class="page-header">
+		  <h2>상품등록</h2>
+		</div>
+
 <!-- file upload를 위해 encode type 변경 -->
 <form name="detailForm" method="post" enctype="multipart/form-data">
 
 	<!-- form data는 반드시 name에 담아야 @ModelAttribute에서 인식함... -->
 	<input type="hidden" name="prodNo" value="${prodNo }" />
-	
-		<div class="page-header">
-		  <h2>상품등록</h2>
-		</div>
 	
 		  <div class="form-group">
 		    <label for="prodName">상품명</label>
@@ -138,12 +140,15 @@ $( function() {
 		    <p class="help-block">최대 10MB 이하만 가능합니다...</p>
 		  </div>
 		  
-	  <button type="button" class="btn btn-default">등록</button>
-
-		<button type="button" class="btn btn-default">초기화</button>
-
-		<button type="button" class="btn btn-default">취소</button>
+		  <div class="row">
+		  	<div class="col-sm-offset-10">
+			  <button type="button" class="btn btn-default">등록</button>
+	
+				<button type="button" class="btn btn-default">초기화</button>
 		
+				<button type="button" class="btn btn-default">취소</button>
+			</div>
+		</div>
 </form>
 </div>
 </body>

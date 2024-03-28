@@ -90,9 +90,9 @@ public class ProductController {
 		if(FileUpload.isMultipartContent(request)) {
 			
 			// file이 임시로 저장될 경로 (relative path도 가능)
-			// String tempDirectory = request.getRealPath();
+			//ServletContext의 getRealPath() :: 주어진 path가 존재한다는 가정 하에(?) 유효한 경로를 알려준다.
 			System.out.println("flag :: "+request.getServletContext().getRealPath("/images/uploadFiles"));
-			String tempDirectory = request.getServletContext().getRealPath("/images/uploadFiles");  // Tomcat 내 실제 경로에 save
+			String tempDirectory = request.getServletContext().getRealPath("/images/uploadFiles");  // Tomcat 내 실제 경로에 save해야 eclipse에서 file 갱신 bug 피할 수 있음.
 			
 			
 			/// ServletFileUpload과 DiskFileItemFactory로 class가 분리되었다(?)...
@@ -163,7 +163,7 @@ public class ProductController {
 								e.printStackTrace();
 							}
 						} else {
-							tempProduct.setFileName("/images/empty.GIF");  // root 경로는 context root인데, 현재 view에서 '/image/uploadFiles'를 static path로 잡은 상태
+							tempProduct.setFileName("images/empty.GIF");  // root 경로는 context root인데, 현재 view에서 '/image/uploadFiles'를 static path로 잡은 상태
 						}
 					}
 				}  /// for end
@@ -273,7 +273,7 @@ public class ProductController {
 		} 
 		/// admin은 상품 수정으로 navigation
 		else {  
-			return "forward:/product/updateProductView.jsp?&menu=manage";
+			return "forward:/product/updateProduct";
 		}	
 	}
 
@@ -320,7 +320,17 @@ public class ProductController {
 	
 	@GetMapping("/updateProduct")
 	public String updateProduct(@RequestParam Integer prodNo, Model model) throws Exception {
-		model.addAttribute("product", service.getProduct(prodNo) );
+		Product product =  service.getProduct(prodNo);
+
+		// substring() :: python의 list와 동일한 begin ~ end 방식
+		String year = product.getManuDate().substring(0, 4);
+		String month = product.getManuDate().substring(4, 6);
+		String day = product.getManuDate().substring(6, 8);
+		product.setManuDate(year + "-" + month + "-" + day);
+		System.out.println("end :: "+product.getManuDate());
+
+		model.addAttribute("product", product);
+		
 		return "forward:/product/updateProductView.jsp";
 	}
 	
@@ -388,6 +398,7 @@ public class ProductController {
 							String fileName = fileItem.getName().substring(index + 1);	
 							*/
 							
+							// 이전 image file name을 overwrite
 							String fileName = service.getProduct( product.getProdNo() ).getFileName();
 							product.setFileName(fileName);
 							try {
@@ -397,7 +408,9 @@ public class ProductController {
 								e.printStackTrace();
 							}
 						} else {
-							product.setFileName("/images/empty.GIF");
+							// 사용자가 image를 넣지 않았으면 기존 image를 그대로 가져감
+							// product.setFileName("images/empty.GIF");
+							product.setFileName( service.getProduct(product.getProdNo()).getFileName() );
 						}
 					}
 				}  /// for end
@@ -421,15 +434,20 @@ public class ProductController {
 	}
 
 	
+	/* REST로만 제어할 것이므로 폐기
 	@PostMapping("/deleteProduct")
 	// 어차피 단일 key:value만 받으면 되기 때문에 유도리껏 처리함. 
-	public String deleteProduct(@RequestBody Message prodNo) throws Exception {
-		int result = service.deleteProduct( Integer.parseInt(prodNo.getMsg()) );
+	public String deleteProduct(@RequestBody Product product) throws Exception {
+		int result = service.deleteProduct( product.getProdNo() );
 		
-		if(result == 1)
+		if(result == 1) {
+			File oldFile = new File();
+			
 			return "forward:/product/listProduct/manage";
+		}
+			
 		else
-			return "redirect:/product/getProduct?menu=manage&prodNo="+prodNo;
+			return "redirect:/product/getProduct?menu=manage&prodNo="+product.getProdNo();
 	}
-	
+	*/
 }

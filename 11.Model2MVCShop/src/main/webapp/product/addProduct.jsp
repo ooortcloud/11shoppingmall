@@ -59,89 +59,48 @@
 	<jsp:include page="/layout/toolbar.jsp" />
    	<!-- ToolBar End /////////////////////////////////////-->
 
-<div class="page-header">
-  <h1>등록된 상품</h1>
-</div>
 
-<table class="table" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top: 13px;">
-	<tr>
-		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
-	</tr>
-	<tr>
-		<td width="104" class="ct_write">
-			상품명 <img src="/images/ct_icon_red.gif" width="3" height="3" align="absmiddle"/>
-		</td>
-		<td bgcolor="D6D6D6" width="1"></td>
-		<td class="ct_write01">
-			<table width="100%" border="0" cellspacing="0" cellpadding="0">
-				<tr>
-					<td width="105">${requestScope.product.prodName }</td>
-					<td></td>
-				</tr>
-			</table>
-		</td>
-	</tr>
-	<tr>
-		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
-	</tr>
+<div class="container">
+	<div class="page-header">
+	  <h1>등록된 상품</h1>
+	</div>
 
-	<tr>
-		<td width="104" class="ct_write">
-			상품상세정보 <img  src="/images/ct_icon_red.gif" width="3" height="3" align="absmiddle"/>
-		</td>
-		<td bgcolor="D6D6D6" width="1"></td>
-		<td class="ct_write01">${product.prodDetail }</td>
-	</tr>
-	<tr>
-		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
-	</tr>
-
-	<tr>
-		<td width="104" class="ct_write">
-			제조일자<img	src="/images/ct_icon_red.gif" width="3" height="3" align="absmiddle"/>
-		</td>
-		<td bgcolor="D6D6D6" width="1"></td>
-		<td class="ct_write01">${product.manuDate }</td>
-	</tr>
-	<tr>
-		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
-	</tr>
-	<tr>
-		<td width="104" class="ct_write">
-			가격<img 	src="/images/ct_icon_red.gif" width="3" height="3" align="absmiddle"/>
-		</td>
-		<td bgcolor="D6D6D6" width="1"></td>
-		<td class="ct_write01">${product.price }</td>
-	</tr>
-
-	<tr>
-		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
-	</tr>
-	<tr>
-		<td width="104" class="ct_write">상품이미지</td>
-		<td bgcolor="D6D6D6" width="1"></td>
-		<td class="ct_write01">
-			<!-- 테이블 시작 -->
-			<table border="0" cellspacing="0" cellpadding="0">
-				<tr>
-					<td height="26">
-						<!-- eclipse 위에서 도는 server에서는 바로 넣은 file을 인지하지 못함...(refresh 필수) 하지만 배포 이후에는 해결될 문제임 -->
-						<!-- style을 활용하여 이미지의 비율을 유지하면서 최대 높이와 너비를 지정함 -->
-						<img src="/images/uploadFiles/${product.fileName }" style="max-width: 400px; max-height: 300px;" align="absmiddle"/>
-					</td>
-				</tr>
-			</table>
-		</td>
-	</tr>
-	<tr>
-		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
-	</tr>
+<table class="table">
+	<tbody>
+		<tr>
+			<th scope="row">상품명</th>
+			<!-- object scope 종류 :: pageScope < requestScope < sessionScope < applicationScope -->
+			<td>${requestScope.product.prodName }</td>
+		</tr>
+		<tr>
+			<th scope="row">상품상세정보</th>
+			<td>${product.prodDetail }</td>
+		</tr>
+		<tr>
+			<th scope="row">제조일자</th>
+			<td>${product.manuDate }</td>
+		</tr>
+		<tr>
+			<th scope="row">가격</th>
+			<td>${product.price }</td>
+		</tr>
+		<tr>
+		<tr>
+			<th scope="row">상품이미지</th>
+			<td>
+				<img src="/images/uploadFiles/${product.fileName }" style="max-width : 400px; max-height : 300px;" align="absmiddle" />
+			</td>
+		</tr>
+	</tbody>
 </table>
 
-
-	  <button type="button" class="btn btn-default">확인</button>
-
-		<button type="button" class="btn btn-default">추가등록</button>
-
+	<div class="row">
+		<div class="col-sm-offset-10">
+		  	<button type="button" class="btn btn-default">확인</button>
+	
+			<button type="button" class="btn btn-default">추가등록</button>
+		</div>
+	</div>
+</div> <!-- container end -->
 </body>
 </html>

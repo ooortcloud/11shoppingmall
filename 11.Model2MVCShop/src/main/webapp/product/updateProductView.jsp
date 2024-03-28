@@ -86,7 +86,7 @@ function fncUpdateProduct(){
 				
 				$.ajax({
 					// key : value 형식
-					url : "/product/deleteProduct",
+					url : "/rest/product/json/deleteProduct",
 					method : "POST",
 					dataType : "JSON",
 					headers : {
@@ -94,14 +94,18 @@ function fncUpdateProduct(){
 						"Content-Type" : "application/json"
 					},
 					data : JSON.stringify({ 
-						msg : $('input:hidden[name="prodNo"]').val() 
+						prodNo : $('input:hidden[name="prodNo"]').val(),
+						fileName : $('input:hidden[name="oldFileName"]').val()
 					}),
 					success : function(responseBody, httpStatus){
 						
-						if(httpStatus != 200) {
+						console.log("flag");
+						console.log(responseBody);
+						if(responseBody.msg != "ok") {
 							alert('상품 제거에 실패...');  
 						} else {
-							alert('상품 제거에 성공하였습니다!');  
+							alert('상품 제거에 성공하였습니다!');
+							window.location.href = "/product/listProduct/manage";
 						}
 					}
 				});
@@ -130,100 +134,57 @@ function fncUpdateProduct(){
 	<jsp:include page="/layout/toolbar.jsp" />
    	<!-- ToolBar End /////////////////////////////////////-->
 
-<form name="detailForm" method="post" enctype="multipart/form-data">
-
-<input type="hidden" name="prodNo" value="${requestScope.product.prodNo }"/>
-<input type="hidden" name="regDate" value="${product.regDate }"/>
-
-<div class="page-header">
-  <h1>상품 수정</h1>
+<div class="container">
+	<div class="page-header">
+	  <h1>상품 수정</h1>
+	</div>
+	
+	<form name="detailForm" method="post" enctype="multipart/form-data">
+	
+	<input type="hidden" name="prodNo" value="${requestScope.product.prodNo }"/>
+	<input type="hidden" name="regDate" value="${product.regDate }"/>
+	<input type="hidden" name="oldFileName" value="${product.fileName }" />
+	
+			  <div class="form-group">
+			    <label for="prodName">상품명</label>
+			    <input type="text" class="form-control" id="prodName" name="prodName" placeholder="상품명" value="${product.prodName }">
+			  </div>
+			  <div class="form-group">
+			    <label for="prodDetail">상품상세정보</label>
+			    <input type="text" class="form-control" id="prodDetail" name="prodDetail" placeholder="상품상세정보" value="${product.prodDetail }">
+			  </div>
+		  	  <div class="form-group">
+			    <label for="manuDate">제조일자</label>
+			    <input type="text" name="manuDate" id="manuDate" readonly="readonly" class="ct_input_g"  
+								style="width: 100px; height: 19px"	maxLength="10" minLength="6" value="${product.manuDate }"/>
+						&nbsp;<img src="../images/ct_icon_date.gif" width="15" height="15" 
+												onclick="show_calendar('document.detailForm.manuDate', document.detailForm.manuDate.value)"/>
+			  </div>
+			  <div class="form-group">
+			    <label for="price">가격</label>
+			    <label class="sr-only" for="price">가격</label>
+			    <div class="input-group">
+			      <input type="number" class="form-control" id="price" name="price" placeholder="가격" value="${product.price }">
+			      <div class="input-group-addon">원</div>
+		    	</div>
+			  </div>
+			  <div class="form-group">
+			    <label for="fileName">상품 이미지</label>
+			    <input type="file" id="fileName" name="fileName">
+			    <p class="help-block">최대 10MB 이하만 가능합니다...</p>
+			  </div>
+	
+		<div class="row">
+			<div class="col-sm-offset-10">
+				<button type="button" class="btn btn-default">수정</button>
+				
+				<button type="button" class="btn btn-default">삭제</button>
+				
+				<button type="button" class="btn btn-default">취소</button>
+			</div>
+		</div>
+	
+	</form>
 </div>
-
-<table class="table" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top: 13px;">
-	<tr>
-		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
-	</tr>
-	<tr>
-		<td width="104" class="ct_write">
-			상품명 <img src="/images/ct_icon_red.gif" width="3" height="3" align="absmiddle"/>
-		</td>
-		<td bgcolor="D6D6D6" width="1"></td>
-		<td class="ct_write01">
-			<table width="100%" border="0" cellspacing="0" cellpadding="0">
-				<tr>
-					<td width="105">
-						<input 	type="text" name="prodName" class="ct_input_g" 
-										style="width: 100px; height: 19px" maxLength="20" value="${product.prodName }">
-					</td>
-				</tr>
-			</table>
-		</td>
-	</tr>
-	<tr>
-		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
-	</tr>
-	<tr>
-		<td width="104" class="ct_write">
-			상품상세정보 <img	src="/images/ct_icon_red.gif" width="3" height="3" align="absmiddle"/>
-		</td>
-		<td bgcolor="D6D6D6" width="1"></td>
-		<td class="ct_write01">
-			<input type="text" name="prodDetail" value="${product.prodDetail }" class="ct_input_g" 
-						style="width: 100px; height: 19px" maxLength="10"	minLength="6">
-		</td>
-	</tr>
-	<tr>
-		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
-	</tr>
-	<tr>
-		<td width="104" class="ct_write">
-			제조일자 <img src="/images/ct_icon_red.gif" width="3" height="3" align="absmiddle"/>
-		</td>
-		<td bgcolor="D6D6D6" width="1"></td>
-		<td class="ct_write01">
-			<input type="text" readonly="readonly" name="manuDate" value="${product.manuDate }" 	
-						class="ct_input_g" style="width: 100px; height: 19px" maxLength="10" minLength="6">&nbsp;
-						<img 	src="../images/ct_icon_date.gif" width="15" height="15" 
-									onclick="show_calendar('document.detailForm.manuDate', document.detailForm.manuDate.value)" />
-		</td>
-	</tr>
-	<tr>
-		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
-	</tr>
-	<tr>
-		<td width="104" class="ct_write">
-			가격 <img src="/images/ct_icon_red.gif" width="3" height="3" align="absmiddle"/>
-		</td>
-		<td bgcolor="D6D6D6" width="1"></td>
-		<td class="ct_write01">
-			<input type="text" name="price" value="${product.price }"
-						class="ct_input_g" style="width: 100px; height: 19px" maxLength="50"/>&nbsp;원
-		</td>
-	</tr>
-	<tr>
-		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
-	</tr>
-	<tr>
-		<td width="104" class="ct_write">상품이미지</td>
-		<td bgcolor="D6D6D6" width="1"></td>
-		<td class="ct_write01">
-			<input	type="file" name="fileName" class="ct_input_g" 
-						style="width: 200px; height: 19px" maxLength="13"/>
-		</td>
-	</tr>
-	<tr>
-		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
-	</tr>
-</table>
-
-<button type="button" class="btn btn-default">수정</button>
-
-<button type="button" class="btn btn-default">삭제</button>
-
-<button type="button" class="btn btn-default">취소</button>
-
-
-</form>
-
 </body>
 </html>
