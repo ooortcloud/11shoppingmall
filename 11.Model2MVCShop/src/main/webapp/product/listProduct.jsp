@@ -9,7 +9,31 @@
 <head>
 <title>상품 관리</title>
 
-<link rel="stylesheet" href="/css/admin.css" type="text/css">
+<!-- 참조 : http://getbootstrap.com/css/   참조 -->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	
+	<!--  ///////////////////////// Bootstrap, jQuery CDN ////////////////////////// -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" >
+	<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" ></script>
+	
+	<!-- Bootstrap Dropdown Hover CSS -->
+   <link href="/css/animate.min.css" rel="stylesheet">
+   <link href="/css/bootstrap-dropdownhover.min.css" rel="stylesheet">
+   
+    <!-- Bootstrap Dropdown Hover JS -->
+   <script src="/javascript/bootstrap-dropdownhover.min.js"></script>
+
+	<!--  ///////////////////////// CSS ////////////////////////// -->
+	<style>
+		body {
+            padding-top : 50px;
+        }
+    </style>
+
+
+<!-- <link rel="stylesheet" href="/css/admin.css" type="text/css">  -->
  
 <script type="text/javascript">
 	function fncGetProductList(currentPage) {
@@ -41,6 +65,13 @@
 		fncGetProductList(document.getElementById("currentPage").value );	
 	}
 
+	
+	$(function() {
+		
+		$('button:contains("검색")').on('click', function() {
+			document.getElementById('detailForm').submit();
+		});
+	});
 </script>
 
 <!-- jQuery core library 외에도 다양한 library 추가해야 함 -->
@@ -48,6 +79,8 @@
 <script src="//code.jquery.com/jquery-1.12.4.js"></script>
 <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script> 
 <script type="text/javascript">
+
+
 
 	$( function() {  
 		
@@ -248,175 +281,143 @@
 </script>
 </head>
 
-<body bgcolor="#ffffff" text="#000000">
+<body>
 
-<div style="width:98%; margin-left:10px;"> 
 
-<form name="detailForm" action="/product/listProduct/${menu }" method="post">
+	<!-- ToolBar Start /////////////////////////////////////-->
+	<jsp:include page="/layout/toolbar.jsp" />
+   	<!-- ToolBar End /////////////////////////////////////-->
+
+<div class="container">
+	<div class="page-header">
+		<h2>
+			<%-- parameter로 받은 data들은 JSTL의 'param' 내부 객체에서 가져옴 --%>
+			<%-- EL 내부에서는 '을 사용해서 감싸도 문자열로 취급함 --%>
+			<c:if test="${menu == 'manage' }">
+				상품 관리
+			</c:if><c:if test="${menu == 'search' }">
+				상품 목록조회
+			</c:if>
+		</h2>
+	</div>
+
+
+<form class="form-horizontal" id="detailForm"  name="detailForm" action="/product/listProduct/${menu }" method="post">
 
 <input type="hidden" id="currentPage" name="currentPage" value="${resultPage.currentPage }" />
 <input type="hidden" id="menu" name="menu" value="${menu }" />
 <input type="hidden" id='priceDESC' name="priceDESC" value="${search.priceDESC}" />
 
-<table width="100%" height="37" border="0" cellpadding="0"	cellspacing="0">
-	<tr>
-		<td width="15" height="37">
-			<img src="/images/ct_ttl_img01.gif" width="15" height="37"/>
-		</td>
-		<td background="/images/ct_ttl_img02.gif" width="100%" style="padding-left:10px;">
-			<table width="100%" border="0" cellspacing="0" cellpadding="0">
-				<tr>
-					<td width="93%" class="ct_ttl01">
-					
-						<%-- parameter로 받은 data들은 JSTL의 'param' 내부 객체에서 가져옴 --%>
-						<%-- EL 내부에서는 '을 사용해서 감싸도 문자열로 취급함 --%>
-						<c:if test="${menu == 'manage' }">
-							상품 관리
-						</c:if><c:if test="${menu == 'search' }">
-							상품 목록조회
-						</c:if>
-					</td>
-				</tr>
-			</table>
-		</td>
-		<td width="12" height="37">
-			<img src="/images/ct_ttl_img03.gif" width="12" height="37"/>
-		</td>
-	</tr>
-</table>
+	<div class="form-group">
+		<label for="searchKeyword" class="col-sm-1 control-label" >상품명</label>
+		<div class="col-sm-5">
+			<input type="text" class="form-control" id="searchKeyword" name="searchKeyword" value="${search.searchKeyword }" placeholder = "상품명" />
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label for="priceMin" class="col-sm-1 control-label">상품가격</label>
+		<div class="col-sm-2">
+			<input type="number" class="form-control"  id="priceMin" name="priceMin" value="${search.priceMin }" placeholder="최소 가격" />
+		</div>
+		<div class="col-sm-1 text-center">
+			&nbsp;~&nbsp;
+		</div>
+		<div class="col-sm-2">
+			<input type="number" class="form-control"  id="priceMax" name="priceMax" value="${search.priceMax }" placeholder = "최대 가격" />
+		</div>
+	</div>
 
 
-<table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top:10px;">
-	<tr>	 
-		 <li>상품명 ::  
-		 	<input 	 type="text" id="searchKeyword" name="searchKeyword"  value="${search.searchKeyword }" 
-							class="ct_input_g" style="width:200px; height:19px" >
-		</li>
-		 <li>상품가격 :: 
-		 	<input type="text" id="priceMin" name="priceMin" value="${search.priceMin }" 
-		 				class="ct_input_g" style="width:200px; height:19px">
-		 	 ~ 
-		 	<input type="text" id="priceMax" name="priceMax" value="${search.priceMax }" 
-		 				class="ct_input_g" style="width:200px; height:19px">
-		 </li>
 		 
-		<td align="right" width="70">
-			<table border="0" cellspacing="0" cellpadding="0">
-				<tr>
-					<td width="17" height="23">
-						<img src="/images/ct_btnbg01.gif" width="17" height="23">
-					</td>
-					<td background="/images/ct_btnbg02.gif" class="ct_btn01" style="padding-top:3px;">
-						검색
-						<!-- <a href="javascript:compare();">검색</a>  -->
-					</td>
-					<td width="14" height="23">
-				     <img src="/images/ct_btnbg03.gif" width="14" height="23">
-					</td>
-				</tr>
-			</table>
-		</td>
-	</tr>
-</table>
-<hr/>
-
- <!-- 가격 정렬 기능을 클릭한 경우 -->
-<c:if test="${ !empty search.priceDESC}">  
-	<!-- 입력한 조건 box에 따라 query string 동적 구현 -->
-	<c:if test="${search.priceDESC == 0 }">
-		<span style="font-size: 12px;"><a href="/product/listProduct/${menu}?priceDESC=0<c:if test='${ !empty search.searchKeyword }'>&searchKeyword=${search.searchKeyword }</c:if><c:if test='${ !empty search.priceMin }'>&priceMin=${search.priceMin }</c:if><c:if test='${ !empty search.priceMax }'>&priceMax=${search.priceMax }</c:if>"><strong>낮은가격순</strong></a></span>
-		<span style="font-size: 12px;"><a href="/product/listProduct/${menu}?priceDESC=1<c:if test='${ !empty search.searchKeyword }'>&searchKeyword=${search.searchKeyword }</c:if><c:if test='${ !empty search.priceMin }'>&priceMin=${search.priceMin }</c:if><c:if test='${ !empty search.priceMax }'>&priceMax=${search.priceMax }</c:if>">높은가격순</a></span>
-	</c:if><c:if test="${search.priceDESC == 1 }">
-		<span style="font-size: 12px;"><a href="/product/listProduct/${menu}?priceDESC=0<c:if test='${ !empty search.searchKeyword }'>&searchKeyword=${search.searchKeyword }</c:if><c:if test='${ !empty search.priceMin }'>&priceMin=${search.priceMin }</c:if><c:if test='${ !empty search.priceMax }'>&priceMax=${search.priceMax }</c:if>">낮은가격순</a></span>
-		<span style="font-size: 12px;"><a href="/product/listProduct/${menu}?priceDESC=1<c:if test='${ !empty search.searchKeyword }'>&searchKeyword=${search.searchKeyword }</c:if><c:if test='${ !empty search.priceMin }'>&priceMin=${search.priceMin }</c:if><c:if test='${ !empty search.priceMax }'>&priceMax=${search.priceMax }</c:if>"><strong>높은가격순</strong></a></span>
-	</c:if>
-</c:if><c:if test="${empty search.priceDESC}"> <!-- 디폴트 --> 
-	<span style="font-size: 12px;"><a href="/product/listProduct/${menu}?priceDESC=0<c:if test='${ !empty search.searchKeyword }'>&searchKeyword=${search.searchKeyword }</c:if><c:if test='${ !empty search.priceMin }'>&priceMin=${search.priceMin }</c:if><c:if test='${ !empty search.priceMax }'>&priceMax=${search.priceMax }</c:if>">낮은가격순</a></span>
-	<span style="font-size: 12px;"><a href="/product/listProduct/${menu}?priceDESC=1<c:if test='${ !empty search.searchKeyword }'>&searchKeyword=${search.searchKeyword }</c:if><c:if test='${ !empty search.priceMin }'>&priceMin=${search.priceMin }</c:if><c:if test='${ !empty search.priceMax }'>&priceMax=${search.priceMax }</c:if>">높은가격순</a></span>
-</c:if> 
-
- 
-<hr/>
-<table id="searchTable" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top:10px;">
-	<tr>
-		<td colspan="11" >전체 ${requestScope.resultPage.totalCount } 건수, 현재 ${resultPage.currentPage } 페이지</td>
-	</tr>
-	<tr>
-		<td class="ct_list_b" width="100">No</td>
-		<td class="ct_line02"></td>
-		<td class="ct_list_b" width="150">상품명</td>
-		<td class="ct_line02"></td>
-		<td class="ct_list_b" width="150">가격</td> 
-		<td class="ct_line02"></td>
-		<td class="ct_list_b">등록일</td>	
-		<td class="ct_line02"></td>
-		<td class="ct_list_b">현재상태</td>	
-	</tr>
-	<tr>
-		<td colspan="11" bgcolor="808285" height="1"></td>
-	</tr>
-	
-	<%-- JSTL에서 로컬변수 선언 가능 --%>
-	<c:set var="no" value="${resultPage.totalCount - resultPage.pageSize * (resultPage.currentPage -1 ) }" />
-	
-	<%-- JSTL에서 index 관리 Collection을 적용한 반복문 사용하기 --%>
-	<c:forEach var="product" items="${requestScope.list }">
-	<tr class="ct_list_pop">
-		<td align="center">${no }</td>
-		<c:set var="no" value="${ no-1 }" />
-		<td></td>
-		<td align="left">
-			<a href="/product/getProduct?prodNo=${product.prodNo }&menu=${menu}"><strong>${product.prodName }</strong></a>
-		</td>
-		<td></td>
-		<td align="left">${product.price }</td>
-		<td></td>
-		<td align="left">${product.regDate }</td>
-		<td></td>
-		<td align="left">
-		
-			<%-- JSTL에서 참조 변수를 만들어서 사용 가능 --%>
-			<c:set var="presentState" value="${product.proTranCode }" />
-			<c:if test="${ (empty presentState) || presentState == 0 }">
-				판매 중
-			</c:if><c:if test="${ presentState != 0}">
-				<c:if test="${menu == 'manage' }">
-					<c:choose>
-						<c:when test="${presentState == 1 }">
-							<!-- <span id="doDelivary">client에게 배송하기</span>  --> 
-							<a id="doDelivery" href='/purchase/updateTranCodeByProd?prodNo=${product.prodNo }&tranCode=2'><strong> client에게 배송하기</strong></a> 
-						</c:when><c:when test="${presentState == 2 }">
-							배송 중	
-						</c:when><c:when test="${presentState == 3 }">
-							배송 완료
-						</c:when>
-					</c:choose>
-				</c:if><c:if test="${menu == 'search' && !( (empty presentState) || presentState == 0 ) }">
-					재고 없음
-				</c:if>
-			</c:if>
-		</td>
-	</c:forEach>
-		<td></td>
-	</tr> 
-	<tr>
-		<td colspan="11" bgcolor="D6D7D6" height="1"></td>
-	</tr>
-</table>
- 
-<table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top:10px;">
-	<tr>
-		<td id="pageNavigator" align="center">		
-
-		   <%-- 하단 페이지 .jsp 모듈을include --%>
-		   <jsp:include page="/common/pageNavigator.jsp"></jsp:include>
-    	</td>
-	</tr>
-</table>
-<!--  페이지 Navigator 끝 -->
-
 </form>
 
-</div>
+	<div class="row">
+		<div class="col-sm-11">
+		<ui class="nav nav-pills" role="tablist">
+			 <!-- 가격 정렬 기능을 클릭한 경우 -->
+			<c:if test="${ !empty search.priceDESC}">  
+				<!-- 입력한 조건 box에 따라 query string 동적 구현 -->
+				<c:if test="${search.priceDESC == 0 }">
+					<li role="presentation" class="active"><a href="/product/listProduct/${menu}?priceDESC=0<c:if test='${ !empty search.searchKeyword }'>&searchKeyword=${search.searchKeyword }</c:if><c:if test='${ !empty search.priceMin }'>&priceMin=${search.priceMin }</c:if><c:if test='${ !empty search.priceMax }'>&priceMax=${search.priceMax }</c:if>">낮은가격순</a></li>
+					<li role="presentation"><a href="/product/listProduct/${menu}?priceDESC=1<c:if test='${ !empty search.searchKeyword }'>&searchKeyword=${search.searchKeyword }</c:if><c:if test='${ !empty search.priceMin }'>&priceMin=${search.priceMin }</c:if><c:if test='${ !empty search.priceMax }'>&priceMax=${search.priceMax }</c:if>">높은가격순</a></li>
+				</c:if><c:if test="${search.priceDESC == 1 }">
+					<li role="presentation"><a href="/product/listProduct/${menu}?priceDESC=0<c:if test='${ !empty search.searchKeyword }'>&searchKeyword=${search.searchKeyword }</c:if><c:if test='${ !empty search.priceMin }'>&priceMin=${search.priceMin }</c:if><c:if test='${ !empty search.priceMax }'>&priceMax=${search.priceMax }</c:if>">낮은가격순</a></li>
+					<li role="presentation" class="active"><a href="/product/listProduct/${menu}?priceDESC=1<c:if test='${ !empty search.searchKeyword }'>&searchKeyword=${search.searchKeyword }</c:if><c:if test='${ !empty search.priceMin }'>&priceMin=${search.priceMin }</c:if><c:if test='${ !empty search.priceMax }'>&priceMax=${search.priceMax }</c:if>">높은가격순</a></li>
+				</c:if>
+			</c:if><c:if test="${empty search.priceDESC}"> <!-- 디폴트 --> 
+				<li role="presentation"><a href="/product/listProduct/${menu}?priceDESC=0<c:if test='${ !empty search.searchKeyword }'>&searchKeyword=${search.searchKeyword }</c:if><c:if test='${ !empty search.priceMin }'>&priceMin=${search.priceMin }</c:if><c:if test='${ !empty search.priceMax }'>&priceMax=${search.priceMax }</c:if>">낮은가격순</a></li>
+				<li role="presentation"><a href="/product/listProduct/${menu}?priceDESC=1<c:if test='${ !empty search.searchKeyword }'>&searchKeyword=${search.searchKeyword }</c:if><c:if test='${ !empty search.priceMin }'>&priceMin=${search.priceMin }</c:if><c:if test='${ !empty search.priceMax }'>&priceMax=${search.priceMax }</c:if>">높은가격순</a></li>
+			</c:if> 
+		</ui>
+		</div>
+		<div class="col-sm-1">
+			<button type="button" class="btn btn-default">검색</button>
+		</div>
+	</div>
+</div> <!-- container end -->
+
+
+	<c:if test="${menu=='search' }">
+		<jsp:include page="/product/mainContents.jsp"></jsp:include>
+	</c:if><c:if test="${menu=='manage' }">
+	
+	<%-- JSTL에서 로컬변수 선언 가능 --%>
+	<c:set var="num" value="${resultPage.totalCount - resultPage.pageSize * (resultPage.currentPage -1 ) }" />
+	<div class="container">
+		<p>전체 ${requestScope.resultPage.totalCount } 건수, 현재 ${resultPage.currentPage } 페이지</p>
+
+		<table class="table table-striped">
+			<thead>
+				<th>No</th>
+				<th>상품명</th>
+				<th>가격</th>
+				<th>등록일</th>
+				<th>현재상태</th>
+			</thead>
+			<tbody>
+				<%-- JSTL에서 index 관리 Collection을 적용한 반복문 사용하기 --%>
+				<c:forEach var="product" items="${requestScope.list}">
+					<tr>
+						<th scope="row">${num }</th>
+						<td><a href="/product/getProduct?prodNo=${product.prodNo }&menu=${menu}">${product.prodName }</a></td>
+						<td>${product.price }</td>
+						<td>${product.regDate }</td>
+						<td>
+							<%-- JSTL에서 참조 변수를 만들어서 사용 가능 --%>
+							<c:set var="presentState" value="${product.proTranCode }" />
+							<c:if test="${ (empty presentState) || presentState == 0 }">
+								판매 중
+							</c:if><c:if test="${ presentState != 0}">
+								<c:if test="${menu == 'manage' }">
+									<c:choose>
+										<c:when test="${presentState == 1 }">
+											<!-- <span id="doDelivary">client에게 배송하기</span>  --> 
+											<a id="doDelivery" href='/purchase/updateTranCodeByProd?prodNo=${product.prodNo }&tranCode=2'><strong> client에게 배송하기</strong></a> 
+										</c:when><c:when test="${presentState == 2 }">
+											배송 중	
+										</c:when><c:when test="${presentState == 3 }">
+											배송 완료
+										</c:when>
+									</c:choose>
+								</c:if><c:if test="${menu == 'search' && !( (empty presentState) || presentState == 0 ) }">
+									재고 없음
+								</c:if>
+							</c:if>
+						</td>
+						<c:set var="num" value="${num-1 }" />
+				</c:forEach>
+			</tbody>
+		</table>
+	</div> <!-- container end -->
+	</c:if>
+
+
+	<!-- search에서만 무한 scroll -->
+	<c:if test="${menu == 'manage' }">
+		<%-- 하단 페이지 .jsp 모듈을include --%>
+		<jsp:include page="/common/pageNavigator.jsp"></jsp:include>
+	</c:if>
+
 </body>
 </html>
