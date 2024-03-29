@@ -87,4 +87,12 @@
 		
 	</bean>
 	
+	<!-- Spring에서 upload 기능 구현을 위해 필요한 resolver append -->
+	<!-- 참고 :: spring boot에서는 이 resolver가 이미 setting되어 있다. -->
+	<bean id="multipartResolver"  class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="defaultEncoding" value='utf-8' />
+		<property name="maxUploadSize" value="10485760" />
+	</bean>
+	
+	
 </beans>

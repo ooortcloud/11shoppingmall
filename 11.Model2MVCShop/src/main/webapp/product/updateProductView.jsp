@@ -169,8 +169,8 @@ function fncUpdateProduct(){
 		    	</div>
 			  </div>
 			  <div class="form-group">
-			    <label for="fileName">상품 이미지</label>
-			    <input type="file" id="fileName" name="fileName">
+			    <label for="thumbnail">상품 이미지</label>
+			    <input type="file" id="thumbnail" name="thumbnail">
 			    <p class="help-block">최대 10MB 이하만 가능합니다...</p>
 			  </div>
 	

@@ -51,7 +51,11 @@
 		
 		$('button:contains("이전")').on('click', function() {
 			// $(window.parent.frames["rightFrame"].document.location).attr('href', 'javascript:history.go(-1)');  // 반드시 'javascript:'를 명시해주어야 한다.
-			window.location.href = "javascript:history.go(-1)";
+			
+			if (window.location.href > 1)  
+				window.location.href = "javascript:history.go(-1)"; 
+			else  //  '최근 본 목록'에서 들어온 경우 새 창을 띄우기 때문에 history가 존재하지 않음...
+				window.location.href = "/product/listProduct/search"
 		}).on('mouseover', function() {
 			$(this).css('cursor', 'pointer');
 		}).on('mouseout', function() {

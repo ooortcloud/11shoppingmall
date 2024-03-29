@@ -4,7 +4,7 @@ import java.sql.Date;
 
 public class Product {
 	
-	private String fileName;
+	private String fileName;  // thumbnail
 	private String manuDate;
 	private Integer price;
 	private String prodDetail;

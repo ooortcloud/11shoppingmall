@@ -107,12 +107,10 @@ $( function() {
 
 <!-- file upload를 위해 encode type 변경 -->
 <form name="detailForm" method="post" enctype="multipart/form-data">
-
-	<!-- form data는 반드시 name에 담아야 @ModelAttribute에서 인식함... -->
-	<input type="hidden" name="prodNo" value="${prodNo }" />
 	
 		  <div class="form-group">
 		    <label for="prodName">상품명</label>
+		    <!-- form data는 반드시 name에 담아야 @ModelAttribute에서 인식함... -->
 		    <input type="text" class="form-control" id="prodName" name="prodName" placeholder="상품명">
 		  </div>
 		  <div class="form-group">
@@ -135,8 +133,8 @@ $( function() {
 	    	</div>
 		  </div>
 		  <div class="form-group">
-		    <label for="fileName">상품 이미지</label>
-		    <input type="file" id="fileName" name="fileName">
+		    <label for="thumbnail">상품 이미지</label>
+		    <input type="file" id="thumbnail" name="thumbnail">
 		    <p class="help-block">최대 10MB 이하만 가능합니다...</p>
 		  </div>
 		  

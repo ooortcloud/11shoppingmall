@@ -19,6 +19,7 @@ import org.apache.commons.fileupload.FileUpload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +29,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.model2.mvc.common.Message;
 import com.model2.mvc.common.Page;
@@ -56,7 +59,7 @@ public class ProductController {
 	 *  	절대경로 :: origin에서 절대경로로 접근하는 것은 아무런 문제가 되지 않음.
 	 *  	상대경로 :: 외부에서 절대경로로 접근 막혀있음. 대신 context root로부터의 상대경로 접근은 허용됨.
 	 */
-	private static final String relativeImagePath = "\\images\\uploadFiles\\";
+	// private static final String relativeImagePath = "\\images\\uploadFiles\\";
 	// private static final String imagePath = "\\images\\uploadFiles\\";  // context root로부터 path를 잡아줘야 보안 이슈가 발생하지 않는다... (C:\ 기반 절대경로로 설정하면 local 접근에 대한 보안 이슈로 차단 )
 	public ProductController() {
 		// TODO Auto-generated constructor stub
@@ -81,9 +84,58 @@ public class ProductController {
 	*/
 
 	/// file upload
+	/*
+	 *  enctype = 'multipart/form-data'
+	 *  consumes(Content-Type)에서 동일하게 설정해줘야 함 
+	 *  @RequestParam, @ModelAttribute :: form data는 어떤 것이든 parameter로 취급... 
+	 *  MultipartHttpServletRequest :: multipartResolver 사용 시 MultipartHttpServletRequest로 변환되어 사용됨. up casting 해서 사용 가능
+	 */
+	@PostMapping(value = "/addProduct", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE} )
+	public String addProduct(@ModelAttribute Product product, @RequestParam(required = false) MultipartFile thumbnail , Model model, HttpServletRequest request) throws Exception {
+
+		// real path를 가져온다.
+		String imagePath = request.getServletContext().getRealPath("/images/uploadFiles");
+		System.out.println("path :: " + imagePath);
+		
+		/// 사용자가 image를 넣지 않는 경우,  예외 file로 대체
+		if(thumbnail.isEmpty())  {
+			product.setFileName(imagePath+"/../empty.GIF");
+		} 
+		/// image가 존재하는 경우 server folder 내 저장, DB에는 fileName 저장
+		else {			
+			/// thumbnail 크기 제한
+			if(thumbnail.getSize() > unitKB * unitKB * 10)
+				System.out.println("10MB 이하의 이미지만 가능합니다...");
+			else {
+				System.out.println("getOriginalFilename() :: " + thumbnail.getOriginalFilename());
+	
+				String extention = "." + thumbnail.getOriginalFilename().split("\\.")[1];  // 확장자 :: '.' 은 정규표현식 특수 문자이므로 일반 문자로 전환해줘야 함 
+				String fileName = new StringTokenizer( UUID.randomUUID().toString(), "-" ).nextToken() + extention;  // unique한 random name으로 저장 :: 동일 img name에 대한 중복 회피
+				File file = new File(imagePath + "/" + fileName);  // save할 file 경로 명시 (original file name까지 명시해야 함)
+				/// unique한 file name을 찾을 때까지 돌리기
+				while( file.exists() ) {
+					fileName = new StringTokenizer( UUID.randomUUID().toString(), "-" ).nextToken() + extention;
+					file = new File(imagePath + "/" + fileName);  // 기존 instance는 GC 대상의 대기를 기대
+				}
+				product.setFileName( fileName );
+				thumbnail.transferTo(file);  // 해당 경로에 img를 transfer(?)
+	
+				if(file.exists()) {
+					StringTokenizer temp = new StringTokenizer( product.getManuDate(), "-" );  // delim 넣어줘야 split해줌
+					product.setManuDate( temp.nextToken() + temp.nextToken() + temp.nextToken() );
+					System.out.println("flag :: " + product);
+					service.addProduct(product);  // id는 sequence에 의해 auto increment
+					model.addAttribute("product", product);  // setter...
+				}
+			}
+		}
+		
+		return "forward:/product/addProduct.jsp";
+	}
+	
+	/// file upload
 	// enctype = multipart/form-data :: @RequestBody
-	@PostMapping("/addProduct")
-	public String addProduct( Model model, HttpServletRequest request) throws Exception {
+	public String addProductOld( Model model, HttpServletRequest request) throws Exception {
 
 		
 		/// Content-Type이 'multipart/form-data'인 경우
@@ -343,7 +395,29 @@ public class ProductController {
 	*/
 	
 	@PostMapping("/updateProduct")
-	public String updateProduct(Model model, HttpServletRequest request) throws Exception {
+	public String updateProduct(@ModelAttribute Product product, @RequestParam(required=false) MultipartFile thumbnail, Model model, HttpServletRequest request) throws Exception {
+		
+		String oldFileName = service.getProduct(product.getProdNo()).getFileName();
+		/// user가 새 thumbnail을 추가했다면?
+		if( !thumbnail.isEmpty() ) {
+			
+			File file = new File( request.getServletContext().getRealPath("/images/uploadFiles") + "/" + oldFileName );
+			// file.delete();  
+			thumbnail.transferTo(file);  // 기존 file이 존재하면, 그것을 제거한 후 write
+		} 
+		/// thunbnail 변경사항이 없으면 기존 것을 그대로 채용, thumbnail 있어도 기존 이름으로 변경해야 함.
+		product.setFileName(oldFileName);
+
+		StringTokenizer temp = new StringTokenizer( product.getManuDate(), "-" );  // delim 넣어줘야 split해줌
+		product.setManuDate( temp.nextToken() + temp.nextToken() + temp.nextToken() );
+		service.updateProduct(product);
+		
+		return "forward:/product/updateProduct.jsp";
+	}
+	
+	
+	
+	public String updateProductOld( Model model, HttpServletRequest request) throws Exception {
 		
 		if(FileUpload.isMultipartContent(request)) {
 			
@@ -432,22 +506,4 @@ public class ProductController {
 		
 		return "forward:/product/updateProduct.jsp";
 	}
-
-	
-	/* REST로만 제어할 것이므로 폐기
-	@PostMapping("/deleteProduct")
-	// 어차피 단일 key:value만 받으면 되기 때문에 유도리껏 처리함. 
-	public String deleteProduct(@RequestBody Product product) throws Exception {
-		int result = service.deleteProduct( product.getProdNo() );
-		
-		if(result == 1) {
-			File oldFile = new File();
-			
-			return "forward:/product/listProduct/manage";
-		}
-			
-		else
-			return "redirect:/product/getProduct?menu=manage&prodNo="+product.getProdNo();
-	}
-	*/
 }
