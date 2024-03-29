@@ -115,7 +115,7 @@
 		
 			$.ajax( {
 				 
-				url : "/rest/product/json/listProduct/autocomplete",
+				url : "/rest/product/json/listProduct/"+$('input[name="menu"]').val()+"/autocomplete",
 				method : "POST",
 				dataType : "JSON",
 				headers : {
@@ -130,7 +130,7 @@
 					searchKeyword : inputKeyword.val(),
 					priceMin : $('#priceMin').val(),
 					priceMax : $('#priceMax').val(),
-					currentPage : "1" 
+					currentPage : "1"
 				}),   
 				success : function(responseBody, httpStatus) {
 					
@@ -175,100 +175,103 @@
 									success: function(responseBody, httpStatus) {
 
 										console.log("list 재구성...")
-										const searchTable = $('#searchTable');
-										searchTable.empty();  // 기존 list 전부 지운다.
+										const searchList = $('#searchList');
+										searchList.empty();
 										
-										//  list 개수만큼 반복해서 append하면 됨...
-										let num = responseBody.resultPage.totalCount;
 										const menu = $('#menu').val();
-										// JSTL을 사용하면 사용자의 event에 따라 동적으로 화면 전환이 불가능...
-										searchTable.append("<tr><td colspan='11' >전체 "+responseBody.resultPage.totalCount+" 건수, 현재 "+responseBody.resultPage.currentPage+" 페이지</td></tr>");
-										
-										/// table column name list
-										let temp = "";  
-										temp = "<tr><td class='ct_list_b' width='100'>No</td>"
-													+"<td class='ct_line02'></td>"
-													+'<td class="ct_list_b" width="150">상품명</td>'
-													+'<td class="ct_line02"></td>'
-													+'<td class="ct_list_b" width="150">가격</td>'
-													+'<td class="ct_line02"></td>'
-													+'<td class="ct_list_b">등록일</td>'
-													+'<td class="ct_line02"></td>'
-													+'<td class="ct_list_b">현재상태</td></tr>'
-													+"</tr>";
-										searchTable.append(temp);
-										searchTable.append('<tr><td colspan="11" bgcolor="808285" height="1"></td></tr>\n\n\n');
-										
-										/// table row
-										temp="";
-										for(const item of responseBody.list) { 
-											temp += "<tr class='ct_list_pop'>\n"
-											temp += "<td align='center'>"+num+"</td>\n";
-											num--;
-											temp += "<td></td>\n";
-											temp += "<td align='left'>\n";
-											temp += "<a style='text-decoration:none' href='/product/getProduct?prodNo="+item.prodNo+"&menu="+menu+"'><strong>"+item.prodName+"</strong></a>\n";
-											temp += "</td>\n"
-											temp +=  "<td></td>\n";
-											temp += "<td align='left'>"+item.price+"</td>\n";
-											temp += "<td></td>\n";
-											temp += "<td align='left'>"+new Date(item.regDate).toLocaleDateString()+"</td>\n";  // Date 형식에 맞게 변환 필요
-											temp += "<td></td>\n";
-											temp += "<td align='left'>\n";
+										if(menu  == 'manage' ) {
+												
+											//  list 개수만큼 반복해서 append하면 됨...
+											let num = responseBody.resultPage.totalCount;
+											// JSTL을 사용하면 사용자의 event에 따라 동적으로 화면 전환이 불가능...
+											searchList.append("<p>전체 "+num+" 건수, 현재 "+1+" 페이지</p>");
+	
+											/// table head
+											let temp = "";  
+											temp = "<table class='table table-striped'><thead>"
+															+"<th>No</th>"
+															+'<th>상품명</th>'
+															+'<th>가격</th>'
+															+'<th>등록일</th>'
+															+'<th>현재상태</th>'
+														+"</thead>";
 											
-											let presentState = item.proTranCode;
-											if(presentState == null || presentState == 0) {
-												temp += "판매 중";
-											} else {
-												if(menu == "manage") {
-													switch(presentState) {
-														case 1:
-															temp += "<a id='doDelivery' href='/purchase/updateTranCodeByProd?prodNo="+item.prodNo+"&tranCode=2'><strong> client에게 배송하기</strong></a>";
-															break;
-														case 2:
-															temp += "배송 중";
-															break;
-														case 3:
-															temp += "배송 완료";
-															break;
-													}
+											/// table row
+											temp += "<tbody>"
+											for(const item of responseBody.list) { 
+												temp += "<tr>";
+												temp += "<th scope='row'>"+num+"</th>";
+												temp += "<td><a href='/product/getProduct?prodNo="+item.prodNo+"&menu="+menu+"'>"+item.prodName+"</a></td>";
+												temp += "<td>"+item.price+"</td>";
+												temp += "<td>"+new Date(item.regDate).toLocaleDateString()+"</td>";  // Date 형식에 맞게 변환 필요
+												temp += "<td>";
+												let presentState = item.proTranCode;
+												if(presentState == null || presentState == '0') {
+													temp += "판매 중";
 												} else {
-													temp += "재고 없음";
+													if(menu == "manage") {
+														// switch 문 내에서는 type까지 고려하여 비교함 ('===')
+														switch(presentState) {
+															case '1':
+																temp += "<a id='doDelivery' href='/purchase/updateTranCodeByProd?prodNo="+item.prodNo+"&tranCode=2'>client에게 배송하기</a>";
+																break;
+															case '2':
+																temp += "배송 중";
+																break;
+															case '3':
+																temp += "배송 완료";
+																break;
+															default:
+																console.log("error");
+																break;
+														}
+													} else {
+														temp += "재고 없음";
+													}
 												}
+												temp += '</td></tr>'; 
+												
+												num--;
+											}  /// for end
+											temp += "</tbody></table>";
+											searchList.append(temp);
+											
+											/// page navigator
+											temp="";
+											const pageNavigator = $('#pager');
+											pageNavigator.empty();  // navigator 초기화
+											if(responseBody.resultPage.currentPage <= responseBody.resultPage.pageUnit) {
+												temp += "<li class='disabled'>";
+											} else {
+												temp += "<li><a href='javascript:fncGetProductList("+(responseBody.resultPage.beginUnitPage - 1)+")'><span aria-hidden='true'>&laquo;</span></a></li>";
+											}
+
+											for(let i = responseBody.resultPage.beginUnitPage; i < responseBody.resultPage.endUnitPage + 1; i++ ) {
+												if(i==1) // 검색하면 무조건 첫 page로 회귀
+													temp += "<li class='active'>";
+												else
+													temp += "<li>";
+												temp += "<a href='javascript:fncGetProductList("+i+")'>"+i+"</a>";  
+												temp += "</li>";
 											}
 											
-											temp += '</td></tr>'; 
-										}  /// for end
-										
-										temp += '<tr><td colspan="11" bgcolor="D6D7D6" height="1"></td></tr>';
-										searchTable.append(temp);
-										
-										/// page navigator
-										temp="";
-										const pageNavigator = $('td#pageNavigator');
-										pageNavigator.empty();  // navigator 초기화
-										if(responseBody.resultPage.currentPage <= responseBody.resultPage.pageUnit) {
-											temp += "◀ 이전";
+											console.log("maxPage :: " + responseBody.resultPage.maxPage);
+											if(responseBody.resultPage.endUnitPage >= responseBody.resultPage.maxPage) {
+												temp += "<li class='disabled'>";
+											} else {
+												temp += "<li><a href='javascript:fncGetProductList("+(responseBody.resultPage.endUnitPage + 1)+")'><span aria-hidden='true'>&raquo;</span></a></li>";
+											}
+											pageNavigator.append(temp);
+											
+										}
+										/// '상품 검색'에서는 무한 scroll로 재구성
+										else if ($('#menu').val() == 'search') {
+											
 										} else {
-											temp += "<a href='javascript:fncGetProductList("+(responseBody.resultPage.beginUnitPage - 1)+")'>◀ 이전</a>";
+											// nothing
 										}
-										temp += " ";
-										console.log("beginUnitPage :: " + responseBody.resultPage.beginUnitPage);
-										console.log("endUnitPage :: " + responseBody.resultPage.endUnitPage);
-										for(let i = responseBody.resultPage.beginUnitPage; i < responseBody.resultPage.endUnitPage + 1; i++ ) {
-											temp += "<a href='javascript:fncGetProductList("+i+")'>"+i+"</a>";
-											temp += " ";
-										}
-										
-										console.log("maxPage :: " + responseBody.resultPage.maxPage);
-										if(responseBody.resultPage.endUnitPage >= responseBody.resultPage.maxPage) {
-											temp += "이후 ▶";
-										} else {
-											temp += "<a href='javascript:fncGetProductList("+(responseBody.resultPage.endUnitPage + 1)+")'>이후 ▶</a>";
-										}
-										pageNavigator.append(temp);
 									}
-								});
+								});  // list 재구성 end
 							}
 						});  /// autocomplete callback end
 					} else { // if( responseBody === null )
@@ -359,12 +362,17 @@
 
 
 	<c:if test="${menu=='search' }">
+		<div class="container">
+			<div class="page-header">
+				<h2>상품 리스트</h2>
+			</div>
+		</div>
 		<jsp:include page="/product/mainContents.jsp"></jsp:include>
 	</c:if><c:if test="${menu=='manage' }">
 	
 	<%-- JSTL에서 로컬변수 선언 가능 --%>
 	<c:set var="num" value="${resultPage.totalCount - resultPage.pageSize * (resultPage.currentPage -1 ) }" />
-	<div class="container">
+	<div class="container" id="searchList">
 		<p>전체 ${requestScope.resultPage.totalCount } 건수, 현재 ${resultPage.currentPage } 페이지</p>
 
 		<table class="table table-striped">
@@ -404,7 +412,8 @@
 									재고 없음
 								</c:if>
 							</c:if>
-						</td>
+							</td>
+						</tr>
 						<c:set var="num" value="${num-1 }" />
 				</c:forEach>
 			</tbody>

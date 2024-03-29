@@ -26,11 +26,13 @@
    <script src="/javascript/bootstrap-dropdownhover.min.js"></script>
    
    
+   <%--
    <!-- jQuery UI toolTip 사용 CSS-->
   <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
   <!-- jQuery UI toolTip 사용 JS-->
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-	
+ --%>
+	 
 	<!--  CSS 추가 : 툴바에 화면 가리는 현상 해결 :  주석처리 전, 후 확인-->
 	<style>
         body {
@@ -40,7 +42,8 @@
    	
      <!--  ///////////////////////// JavaScript ////////////////////////// -->
 	 	
-	
+	<!-- main contents load 용 -->
+	<jsp:include page="/product/mainContents.jsp"></jsp:include>
 </head>
 	
 <body>
@@ -57,7 +60,11 @@
 		  <h1><span class="glyphicon glyphicon-bullhorn" aria-hidden="true"></span>&nbsp;최신 상품<small>&nbsp;&nbsp;현재 새롭게 등록된 아이템들이에요</small></h1>
 		</div>
 	</div>
-	<jsp:include page="/product/mainContents.jsp" />
+	
+	
+	<div class="container" id="mainContents">
+	
+	</div>
    	<!-- mainPage End /////////////////////////////////////-->
 
 </body>

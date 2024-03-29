@@ -38,8 +38,13 @@
    	<!--  ///////////////////////// JavaScript ////////////////////////// -->
 	<script type="text/javascript">
 		
+		window.addEventListener('DOMcontentLoaded', function() {
+			console.log('hi');
+		}) 
+	
 		//============= 회원원가입 화면이동 =============
-		$( function() {
+		$( function() {			
+			
 			//==> 추가된부분 : "addUser"  Event 연결
 			$("a[href='#' ]:contains('회원가입')").on("click" , function() {
 				self.location = "/user/addUser"
@@ -56,6 +61,8 @@
 		
 	</script>	
 	
+	<!-- main contents load 용 -->
+	<jsp:include page="/product/mainContents.jsp"></jsp:include>
 </head>
 
 <body>
@@ -98,7 +105,9 @@
 		</div>
 	</div>
 	
-	<jsp:include page="/product/mainContents.jsp" />
+	<div class="container" id="mainContents">
+		
+	</div>
    	<!-- mainPage End /////////////////////////////////////-->
 
 </body>

@@ -132,13 +132,14 @@ public class ProductRestController {
 		return jsonMap;
 	}
 	
-	@PostMapping("/json/listProduct/autocomplete") 
-	public Map<String, Object> postListProductAutoComplete(@RequestBody Search search) throws Exception {
+	@PostMapping("/json/listProduct/{menu}/autocomplete") 
+	public Map<String, Object> postListProductAutoComplete(@RequestBody Search search, @PathVariable String menu) throws Exception {
 		
 		Map<String, Object> map = service.getProductList(search, "autocomplete");
 		
 		Map<String, Object> jsonMap = new HashMap<>();
 		jsonMap.put("list", map.get("list"));
+		jsonMap.put("menu", menu);
 		
 		return jsonMap;
 	}

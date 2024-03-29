@@ -337,7 +337,7 @@ public class ProductController {
 	 *  @PathVariable :: 어디에도 load하지 않는다...
 	 */
 	@RequestMapping("/listProduct/{menu}")
-	public String listProduct(@ModelAttribute(binding=true) Search search, @PathVariable String menu, Model model) throws Exception {
+	public String listProduct(@ModelAttribute(binding=true) Search search, @PathVariable String menu, Model model, HttpServletRequest request) throws Exception {
 		
 		// 최초 접근 시 Query Parameter인 currentPage값이 null일 때 1페이지에서 시작하도록 설정
 		if(search.getCurrentPage() == null ||  search.getCurrentPage() == 0)

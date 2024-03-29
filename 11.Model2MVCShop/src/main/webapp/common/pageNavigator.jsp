@@ -9,7 +9,7 @@
 		 <nav id="page-navigator">
 		  <!-- 크기조절 :  pagination-lg pagination-sm-->
 			  <!-- <ul class="pagination" >  -->
-			    <ul class="pager" >
+			    <ul class="pager" id="pager" >
 			    <!--  <<== 좌측 nav -->
 			    <!-- 현재 page가 page 묶음(?)보다 작을 경우 이전 page 묶음 이동 link 불필요 -->
 			  	<c:if test="${ resultPage.currentPage <= resultPage.pageUnit }">
@@ -56,7 +56,7 @@
 				      </a>
 				</c:if>
 				    </li>
-		 	 </ul>
+		 	 </ul>  <!-- pager end -->
 		</nav>
 </div>
  
