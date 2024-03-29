@@ -6,9 +6,12 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!-- ///////////////////////////// 로그인시 Forward  /////////////////////////////////////// -->
+<%--user 객체를 어디서 얻은 거지? --%>
+<%-- RootController에서 navigation 처리
  <c:if test="${ ! empty user }">
  	<jsp:forward page="main.jsp"/>
  </c:if>
+  --%>
  <!-- //////////////////////////////////////////////////////////////////////////////////////////////////// -->
 
 
@@ -60,9 +63,7 @@
 		});
 		
 	</script>	
-	
-	<!-- main contents load 용 -->
-	<jsp:include page="/product/mainContents.jsp"></jsp:include>
+
 </head>
 
 <body>
@@ -70,10 +71,8 @@
 	<!-- ToolBar Start /////////////////////////////////////-->
 	<!-- <div class="navbar  navbar-default">  -->
 	<div class="navbar  navbar-fixed-top navbar-default">
-		
-        <div class="container">
-        
-        	<a class="navbar-brand" href="#">Model2 MVC Shop</a>
+		        
+        	<a class="navbar-brand" href="/">Model2 MVC Shop</a>
 			
 			<!-- toolBar Button Start //////////////////////// -->
 			<div class="navbar-header">
@@ -105,9 +104,8 @@
 		</div>
 	</div>
 	
-	<div class="container" id="mainContents">
-		
-	</div>
+	<!-- main contents load 용 -->
+	<jsp:include page="/product/mainContents.jsp"></jsp:include>
    	<!-- mainPage End /////////////////////////////////////-->
 
 </body>

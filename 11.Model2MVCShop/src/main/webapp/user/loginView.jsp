@@ -39,6 +39,8 @@
 				var id=$("input:text").val();
 				var pw=$("input:password").val();
 				
+				console.log("id = " + id);
+				console.log("pw = " + pw);
 				if(id == null || id.length <1) {
 					alert('ID 를 입력하지 않으셨습니다.');
 					$("#userId").focus();

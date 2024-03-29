@@ -48,7 +48,7 @@ public class LogonCheckInterceptor extends HandlerInterceptorAdapter {
 			if(		uri.indexOf("addUserView") != -1 	|| 	uri.indexOf("addUser") != -1 || 
 					uri.indexOf("loginView") != -1 			||	uri.indexOf("login") != -1 		|| 
 					uri.indexOf("checkDuplication") != -1 ){
-				request.getRequestDispatcher("/index.jsp").forward(request, response);
+				request.getRequestDispatcher("/not_login_index.jsp").forward(request, response);
 				System.out.println("[ 이미 로그인한 상태입니다...]");
 				System.out.println("[ LogonCheckInterceptor end........]\n");
 				return false;

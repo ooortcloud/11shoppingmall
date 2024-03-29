@@ -29,6 +29,7 @@
 	<style>
 		body {
             padding-top : 50px;
+            padding-bottom : 30px;
         }
     </style>
 
@@ -93,6 +94,13 @@
 		}).on('mouseout', function() {
 			$('.ct_btn01:contains("검색")').css('cursor', 'default');
 		});
+		
+		/* 굳이 필요는 없을듯... 현재 hyperlink 방식이라, ajax 리팩토링 비용이 더 큼
+		$('li[role="presentation"]:active').on('click', function() {
+			console.log('flag');
+			$('li[role="presentation"]:active').attr('active', '');
+		});
+		*/
 	});
 	
 	$( function() { 

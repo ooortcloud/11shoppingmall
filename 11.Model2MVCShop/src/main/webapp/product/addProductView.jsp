@@ -33,6 +33,7 @@
 	<style>
         body {
             padding-top : 70px;
+            padding-botton : 30px;
         }
    	</style>
 

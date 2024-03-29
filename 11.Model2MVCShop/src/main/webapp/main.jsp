@@ -41,9 +41,7 @@
    	</style>
    	
      <!--  ///////////////////////// JavaScript ////////////////////////// -->
-	 	
-	<!-- main contents load 용 -->
-	<jsp:include page="/product/mainContents.jsp"></jsp:include>
+
 </head>
 	
 <body>
@@ -60,11 +58,9 @@
 		  <h1><span class="glyphicon glyphicon-bullhorn" aria-hidden="true"></span>&nbsp;최신 상품<small>&nbsp;&nbsp;현재 새롭게 등록된 아이템들이에요</small></h1>
 		</div>
 	</div>
-	
-	
-	<div class="container" id="mainContents">
-	
-	</div>
+			 	
+	<!-- main contents load 용 -->
+	<jsp:include page="/product/mainContents.jsp"></jsp:include>
    	<!-- mainPage End /////////////////////////////////////-->
 
 </body>

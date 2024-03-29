@@ -188,6 +188,7 @@ public class UserRestController {
 	@PostMapping("/json/login/check")
 	public Message loginChecker(@RequestBody User user) throws Exception {
 		
+		System.out.println(user);
 		User result = userService.getUser(user.getUserId() );
 		
 		System.out.println(result);
