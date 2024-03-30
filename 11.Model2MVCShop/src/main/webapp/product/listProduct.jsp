@@ -396,7 +396,7 @@
 				<c:forEach var="product" items="${requestScope.list}">
 					<tr>
 						<th scope="row">${num }</th>
-						<td><a href="/product/getProduct?prodNo=${product.prodNo }&menu=${menu}">${product.prodName }</a></td>
+						<td><a href="/product/getProduct/${menu}?prodNo=${product.prodNo }">${product.prodName }</a></td>
 						<td>${product.price }</td>
 						<td>${product.regDate }</td>
 						<td>

@@ -16,17 +16,21 @@
 <script>
 
 	
-	<%--  c:forEach 안에서 돌려야 prodNo 가져와서 넣어줄 수 있다...
-	// image 눌렀을 때 event 처리
+
+	// image 위에 mouse 올리면 표시
 	$( function() {
 		
 		// jQuery array가 잡혀 있을 거임
 		const imgArr = $('div.thumbnail img.my-thumbnail');
-		console.log(imgArr.html() )
 		
-		imgArr.attr('onclick', 'location.href = "/product/getProduct/search?prodNo=${product.prodNo}"');  // 전체에 대해 event listener attribute 추가 
+		// 모든 element 요소들에 대해 event 적용
+		imgArr.on('mouseover', function() {
+			$(this).css('cursor', 'pointer');
+		}).on('mouseout', function() {
+			$(this).css('cursor', 'default');
+		});	
 	});
---%>
+
 </script>
 
 <div class="container" >
