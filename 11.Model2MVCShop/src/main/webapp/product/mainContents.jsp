@@ -16,12 +16,17 @@
 <script>
 
 	
+	<%--  c:forEach 안에서 돌려야 prodNo 가져와서 넣어줄 수 있다...
 	// image 눌렀을 때 event 처리
 	$( function() {
 		
+		// jQuery array가 잡혀 있을 거임
+		const imgArr = $('div.thumbnail img.my-thumbnail');
+		console.log(imgArr.html() )
 		
+		imgArr.attr('onclick', 'location.href = "/product/getProduct/search?prodNo=${product.prodNo}"');  // 전체에 대해 event listener attribute 추가 
 	});
-
+--%>
 </script>
 
 <div class="container" >
@@ -37,7 +42,7 @@
 								<!-- null 처리는 반드시 'empty' keyword를 사용해야 한다. -->		
 					</c:if><c:if test='${ !empty product.fileName }' >
 
-							<img class="my-thumbnail" src="/images/uploadFiles/${product.fileName }"  />
+						<img class="my-thumbnail" src="/images/uploadFiles/${product.fileName }" onclick=' location.href = "/product/getProduct/search?prodNo=${product.prodNo}" '/>
 
 					</c:if>
 					<div class="caption">
@@ -60,7 +65,7 @@
 								<!-- null 처리는 반드시 'empty' keyword를 사용해야 한다. -->		
 					</c:if><c:if test='${ !empty product.fileName }' >
 
-							<img class="my-thumbnail" src="/images/uploadFiles/${product.fileName }"  />
+							<img class="my-thumbnail" src="/images/uploadFiles/${product.fileName }" onclick=' location.href = "/product/getProduct/search?prodNo=${product.prodNo}" ' />
 
 					</c:if>
 					<div class="caption">

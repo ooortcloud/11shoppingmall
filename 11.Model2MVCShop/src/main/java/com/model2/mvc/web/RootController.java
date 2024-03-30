@@ -19,7 +19,7 @@ import com.model2.mvc.service.product.ProductService;
 public class RootController {
 
 	public RootController() {
-		System.out.println("RootController instance generated...");
+		System.out.println("RootController instance generated...!!!!!");
 	}
 	
 	@Autowired
@@ -34,6 +34,8 @@ public class RootController {
 	// welcome-page의 이름을 'index'로 하면 Spring 내부에서 controller를 무시하고 해당 view로 꽃아버림...
 	@GetMapping("/")
 	public String listProduct(Model model, HttpServletRequest request) throws Exception {
+		
+		System.out.println("flag");
 		
 		// 최신 list를 기준으로 가져오기 위한 최소한의 정보를 제공
 		Search search = new Search();

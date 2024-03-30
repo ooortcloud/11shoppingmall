@@ -245,8 +245,8 @@ public class ProductController {
 	}
 	
 	// HandlerAdapter¿¡¼­ proxy°´Ã¼ ÇüÅÂ·Î HttpServletRequest¿Í HttpServletResponse °´Ã¼¸¦ ³Ñ°ÜÁÜ
-	@GetMapping("/getProduct")
-	public String getProduct(@RequestParam Integer prodNo, @RequestParam String menu, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+	@GetMapping("/getProduct/{menu}")
+	public String getProduct(@RequestParam Integer prodNo, @PathVariable String menu, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 		Product product = service.getProduct(prodNo);
 
 		model.addAttribute("product", product);

@@ -47,6 +47,7 @@
 <body>
 
 	<!-- ToolBar Start /////////////////////////////////////-->
+	<%-- not_login_index.jsp와 통합할 수는 있는데, refactoring 비용이 더 커서 안 건드는 중. --%>
 	<jsp:include page="/layout/toolbar.jsp" />
    	<!-- ToolBar End /////////////////////////////////////-->
 

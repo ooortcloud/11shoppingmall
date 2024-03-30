@@ -29,6 +29,7 @@
 	<style>
 		body {
             padding-top : 50px;
+            padding-bottom : 30px;
         }
     </style>
 
@@ -52,10 +53,10 @@
 		$('button:contains("이전")').on('click', function() {
 			// $(window.parent.frames["rightFrame"].document.location).attr('href', 'javascript:history.go(-1)');  // 반드시 'javascript:'를 명시해주어야 한다.
 			
-			if (window.location.href > 1)  
-				window.location.href = "javascript:history.go(-1)"; 
-			else  //  '최근 본 목록'에서 들어온 경우 새 창을 띄우기 때문에 history가 존재하지 않음...
-				window.location.href = "/product/listProduct/search"
+			if ( document.referrer == '' || document.referrer == "http://localhost:8080/" )  // 홈페이지에서 조회한 경우, 또는 '최근 본 목록'의 새 창에서 돌아가는 경우 홈페이지로 귀환
+				window.location.href = " http://localhost:8080/"; 
+			else 
+				window.location.href = "/product/listProduct/search";
 		}).on('mouseover', function() {
 			$(this).css('cursor', 'pointer');
 		}).on('mouseout', function() {
@@ -68,6 +69,11 @@
 </head>
 
 <body bgcolor="#ffffff" text="#000000">
+
+<script>
+console.log("window.location.href = " + window.location.href);
+console.log("document.referrer = " + document.referrer);
+</script>
 
 	<!-- ToolBar Start /////////////////////////////////////-->
 	<jsp:include page="/layout/toolbar.jsp" />
