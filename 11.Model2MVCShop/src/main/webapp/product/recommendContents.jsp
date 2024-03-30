@@ -4,7 +4,20 @@
 <!--  ///////////////////////// JSTL  ////////////////////////// -->
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-	<div class="container">
+<script>
+
+	$( function() {
+		
+		$('div.carousel-inner').on('mouseover', function() {
+			$(this).css('cursor', 'pointer');
+		}).on('mouseout', function() {
+			$(this).css('cursor', 'default');
+		});	
+	});
+</script>
+
+
+<div class="container">
 		<div class="page-header">
 		  <h1><span class="glyphicon glyphicon-heart" aria-hidden="true"></span>&nbsp;추천 상품<small>&nbsp;&nbsp;우리 매장에서 엄선해서 추천하는 제품들이에요</small></h1>
 		</div>
@@ -19,9 +32,9 @@
 	        <!-- <li data-target="#myCarousel" data-slide-to="2"></li>  -->
 	      </ol>
 	      <div class="carousel-inner" role="listbox">
-	        <div class="item active">
+	        <div class="item active" onclick=' location.href = "/product/getProduct/search?prodNo=10120" '>
 	        <!-- 어차피 마케팅 문구 직접 달아야 하니까 static하게 만드는 것이 최선이다 vs 유지보수를 최우선적으로 알고리즘을 활용하여 자동으로 load되도록 만들어야 한다 -->
-	          <img class="first-slide" src="/images/bigThumbnails/shampoo_big_thumbnail.webp" alt="First slide" onclick=' location.href = "/product/getProduct/search?prodNo=10120" ' >
+	          <img class="first-slide" src="/images/bigThumbnails/shampoo_big_thumbnail.webp" alt="First slide" >
 	          <div class="container">
 	            <div class="carousel-caption">
 	              <h1>폴리페놀 성분으로 만든 볼륨샴푸</h1>
@@ -32,8 +45,8 @@
 	            </div>
 	          </div>
 	        </div>
-	        <div class="item">
-	          <img class="second-slide" src="/images/bigThumbnails/galaxy_book_4_big_ thumbnail.webp" alt="Second slide" onclick=' location.href = "/product/getProduct/search?prodNo=10121" ' >
+	        <div class="item" onclick=' location.href = "/product/getProduct/search?prodNo=10121" '>
+	          <img class="second-slide" src="/images/bigThumbnails/galaxy_book_4_big_ thumbnail.webp" alt="Second slide" >
 	          <div class="container">
 	            <div class="carousel-caption">
 	              <h1>갤럭시북4 국내 판매 10만 기념 프로모션</h1>
@@ -65,5 +78,6 @@
 	        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
 	        <span class="sr-only">Next</span>
 	      </a>
-	    </div><!-- /.carousel -->
-	</div> <!-- container end -->
+	    </div><!--.carousel inner end -->
+	</div> <!-- carousel end -->
+</div> <!-- container end -->

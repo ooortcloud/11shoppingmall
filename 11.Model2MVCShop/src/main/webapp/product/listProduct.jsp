@@ -376,7 +376,8 @@
 			</div>
 		</div>
 		<jsp:include page="/product/mainContents.jsp"></jsp:include>
-	</c:if><c:if test="${menu=='manage' }">
+	</c:if>
+	<c:if test="${menu=='manage' }">
 	
 	<%-- JSTL에서 로컬변수 선언 가능 --%>
 	<c:set var="num" value="${resultPage.totalCount - resultPage.pageSize * (resultPage.currentPage -1 ) }" />
