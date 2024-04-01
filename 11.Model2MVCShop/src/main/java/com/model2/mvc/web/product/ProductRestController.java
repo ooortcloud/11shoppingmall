@@ -102,11 +102,12 @@ public class ProductRestController {
 	JSON 객체 :: query string으로 올려 보냄  << URL에 의존적  @ModelAttribute
 	JSON string :: body에 그대로 담겨서 보냄  @RequestBody
 	 */
+	// REST 통신에서 menu = search의 경우 무한 scroll 지원해야 함 
 	@PostMapping("/json/listProduct/{menu}")
 	public Map<String, Object> postListProduct(@RequestBody Search search, @PathVariable String menu) throws Exception {
 		
 		// 최초 접근 시 Query Parameter인 currentPage값이 null일 때 1페이지에서 시작하도록 설정
-		if(search.getCurrentPage() == 0)
+		if(search.getCurrentPage() == null || search.getCurrentPage() == 0)
 			search.setCurrentPage(1);
 		// 1페이지 이후에서 검색 시 1페이지에서 재시작하도록 설정
 		else if( !CommonUtil.null2str(search.getSearchKeyword()).isEmpty() && search.getCurrentPage() != 1 )
@@ -119,6 +120,12 @@ public class ProductRestController {
 		//  1페이지 이후에서 검색 시 1페이지에서 재시작하도록 설정
 		if( (search.getCurrentPage() > resultPage.getPageUnit() ) && !CommonUtil.null2str(search.getSearchKeyword()).isEmpty() )
 			resultPage.setBeginUnitPage(1);
+		
+		// 무한 scroll 구현을 위해 다음 page로 넘어갔다고 인지시켜야 함 :: REST
+		// 어차피 form data는 classic http 통신을 하기 때문에, 기존 controller와 동기화 문제가 발생하지 않음.
+		// 어차피 검색하면 1page로 static하게 회귀하기 때문에 all clear. 
+		if(menu.equals("search"))
+			resultPage.setCurrentPage( resultPage.getCurrentPage() + 1 );
 		
 		Map<String, Object> jsonMap = new HashMap<>();
 		jsonMap.put("list", map.get("list"));
