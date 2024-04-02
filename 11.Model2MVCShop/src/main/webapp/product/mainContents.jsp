@@ -57,7 +57,9 @@
 					setThumbnails(responseBody, httpStatus);
 				}
 			});
-		} else {
+		} 
+		// 상품 관련 page에서는 검색 조건을 신경써야 함
+		else {
 				$.ajax(	{
 				
 				url : "/rest/product/json/listProduct/search",
@@ -83,9 +85,9 @@
 
 	/*
 		<< 모든 단위는 px >>
-		$(window).scrollTop() :: 현재 browser에 의해 보여지는 view(=window) 중 top(?)쪽의 위치를 get
-		$(window).height() :: 현재 browser에 의해 보여지는 view(=window)의 길이(?)
-		$(document).height() :: 현재 page의 총 height get (요소 추가에 따라 동적으로 변함)
+		$(window).scrollTop() :: 현재 browser에 의해 보여지는 view(=window) 중 top(?)쪽의 위치를 get  == window.scrollY
+		window.innerHeight :: 현재 browser에 보여지는 view의 길이(?)
+		$(document).height() :: 현재 page의 총 height get (요소 추가에 따라 동적으로 변함)  == $(window).height() == document.body.scrollHeight
 		$('body').height() :: body 구성 요소들이 모여서 이뤄진 총 height get (요소 추가에 따라 동적으로 변함)  << style에서 padding을 제외한 값
 	*/
 	// page 첫 load 시 이미 window height가 body height를 넘어섰으면, body height가 window height를 넘어설 때까지 resource get
@@ -95,25 +97,26 @@
 		getResources();
 	console.log("\n");
 	
+		
+	/// scroll event :: throttle pattern
+	var throttleTimer = null;
 	$(window).on('scroll', function() {
-		
-		console.log("scroll head 위치 = " + $(window).scrollTop() );
-		console.log("window 길이 = " + $(window).height() );
-		console.log("total = " + ($(window).scrollTop() + $(window).height() ));
-		console.log("body 요소들이 만들어낸 최대 높이  = " + $('body').height() );
-		
-		// debounce pattern 적용 >> 드르륵(?) 하는 동안 여려번 호출 안 하게 됨
-		if ( $(window).scrollTop() + $(window).height() + 10 >= $('body').height() ) { // 10px 보정치 줘서, 애매하게 조건 만족 못 하는 bug 잡음
-			
-			$(window).off('scroll');  // scroll event listener 제거
-			getResources();
-			
-			// scroll event listener 0.5초 후 재등록
-			setTimeout(function() {
 
-			}, 500);
-		}  
-			
+		console.log("scroll head 위치 = " + $(window).scrollTop() );
+		console.log("browser 창 가시영역 높이 =" + window.innerHeight);
+		console.log("total = " + (window.innerHeight + window.scrollY));
+		console.log("현재 page 최대 높이  = " + $(document).height() );
+		
+		if( !throttleTimer) {
+			// 일정 시간동안 event를 lock건다.
+			throttleTimer = setTimeout(function() {
+				if (window.scrollY + window.innerHeight + 10 >= document.body.scrollHeight) {
+					console.log('flag');
+				}
+				throttleTimer = null;
+			}, 100);
+		}
+		
 		console.log("\n");
 	});
 
