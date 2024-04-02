@@ -15,9 +15,38 @@
 
 <script>
 
-	// image 위에 mouse 올리면 표시
-	$( function() {
+	/// 무한 scroll thumbnail set
+	function setThumbnails(responseBody, httpStatus) {
+
+		temp = "<div class='row'>";
+		let i = 0;
+		for(const product of responseBody.list ) {
+			 
+			if(i == 4) {
+				temp += '</div>';
+				temp += '<div class="row">';
+			}
+			temp += '<div class="col-sm-6 col-md-3">';
+			temp += '<div class="thumbnail" style="height = 500px;" onclick=\' location.href = "/product/getProduct/search?prodNo='+product.prodNo+'" \'>';
+			
+			if(product.fileName == null || product.fileName =='null') {
+				temp += '<img class="my-thumbnail" src="http://placeholder.com/243X200" />';
+			} else {
+				temp += '<img class="my-thumbnail" src="/images/uploadFiles/'+product.fileName+'" />';	
+			}
+			
+			temp += '<div class="caption">';
+			temp += '<h3>'+product.prodName+'</h3>';
+			temp += '<p>'+product.price+'</p>';
+			temp += '</div>';
+			temp += '</div>';  <%-- thumbnail end --%>
+			temp += '</div>';
+			i++;
+		}
+		temp += '</div>';
+		$('#searchList').append(temp);
 		
+		/// image 위에 mouse 올리면 표시
 		// jQuery array가 잡혀 있을 거임
 		const thumbnailArr = $('div.thumbnail');
 		
@@ -27,17 +56,13 @@
 		}).on('mouseout', function() {
 			$(this).css('cursor', 'default');
 		});	
-	});
-	
-	
-	/// 무한 scroll thumbnail set
-	function setThumbnails(responseBody, httpStatus) {
-		console.log('flag - end');
 	}
 	
 	/// 무한 scroll request
+	let currentPage = 1;
 	function getResources() {
-		console.log('flag - start');
+		console.log("currentPage :: "+ currentPage );
+		
 		// root에서는 검색 관련 element들이 존재하지 않으므로 예외 처리
 		if( location.href.substring(location.href.lastIndexOf("/")) == "/" ) {  // test
 			$.ajax(	{
@@ -51,9 +76,11 @@
 				dataType : "JSON",
 				// network 통신 시에는 객체가 아닌 string 형태로 변환
 				data : JSON.stringify({
-					currentPage : $('#tempCurrentPage').val()
+					// currentPage : $('#tempCurrentPage').val()
+					currentPage : currentPage
 				}),
 				success : function(responseBody, httpStatus) {
+					currentPage = responseBody.resultPage.currentPage;
 					setThumbnails(responseBody, httpStatus);
 				}
 			});
@@ -71,12 +98,13 @@
 				dataType : "JSON",
 				// network 통신 시에는 객체가 아닌 string 형태로 변환
 				data : JSON.stringify({
-					currentPage : $('#tempCurrentPage').val(),
+					currentPage : currentPage,
 					searchKeyword : $('#searchKeyword').val(),
 					priceMin : $('#priceMin').val(),
 					priceMax : $('#priceMax').val()
 				}),
 				success : function(responseBody, httpStatus) {
+					currentPage = responseBody.resultPage.currentPage;
 					setThumbnails(responseBody, httpStatus);
 				}
 			});
@@ -102,19 +130,14 @@
 	var throttleTimer = null;
 	$(window).on('scroll', function() {
 
-		console.log("scroll head 위치 = " + $(window).scrollTop() );
-		console.log("browser 창 가시영역 높이 =" + window.innerHeight);
-		console.log("total = " + (window.innerHeight + window.scrollY));
-		console.log("현재 page 최대 높이  = " + $(document).height() );
-		
 		if( !throttleTimer) {
 			// 일정 시간동안 event를 lock건다.
 			throttleTimer = setTimeout(function() {
 				if (window.scrollY + window.innerHeight + 10 >= document.body.scrollHeight) {
-					console.log('flag');
+					getResources();
 				}
 				throttleTimer = null;
-			}, 100);
+			}, 250);
 		}
 		
 		console.log("\n");
@@ -123,13 +146,9 @@
 	
 </script>
 
-<%-- 보이지는 않지만 공간을 차지하는 문제
- <p id="tempCurrentPage"  style="visibility : hidden;">1</p> 
- --%>
-<p id="tempCurrentPage"  style="display : none;">1</p>
-
 <div class="container"  id="searchList">
 
+	<%--
 	<div class="row">
 	<c:forEach var="product" items="${list }" begin="0" end="3" step="1">
 
@@ -175,5 +194,5 @@
 
 	</c:forEach>
 	</div>
-	
+	 --%>
 </div> <!-- container end -->
