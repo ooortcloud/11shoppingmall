@@ -137,7 +137,7 @@
 					getResources();
 				}
 				throttleTimer = null;
-			}, 250);
+			}, 150);
 		}
 		
 		console.log("\n");
