@@ -133,7 +133,7 @@
 		if( !throttleTimer) {
 			// 일정 시간동안 event를 lock건다.
 			throttleTimer = setTimeout(function() {
-				if (window.scrollY + window.innerHeight + 10 >= document.body.scrollHeight) {
+				if (window.scrollY + window.innerHeight >= document.body.scrollHeight - 300) {
 					getResources();
 				}
 				throttleTimer = null;
