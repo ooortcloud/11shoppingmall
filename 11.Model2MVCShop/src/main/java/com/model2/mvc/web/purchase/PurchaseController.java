@@ -142,7 +142,7 @@ public class PurchaseController {
 	@GetMapping("/updateTranCodeByProd")
 	public ModelAndView updateTranCodeByProd(@RequestParam Integer prodNo, @RequestParam String tranCode) throws SQLException {
 		// controller에서 다른 컨트롤러를 호출할 수도 있다! (forward 사용하면 기존 request 유지 가능)
-		ModelAndView mv = new ModelAndView("forward:/product/listProduct?menu=manage");
+		ModelAndView mv = new ModelAndView("forward:/product/listProduct/manage");
 		Purchase purchase = new Purchase();
 		Product product =  new Product();
 		// prod_no로 업데이트하는 경우 

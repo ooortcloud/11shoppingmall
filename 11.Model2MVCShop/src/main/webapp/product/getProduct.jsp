@@ -53,10 +53,13 @@
 		$('button:contains("이전")').on('click', function() {
 			// $(window.parent.frames["rightFrame"].document.location).attr('href', 'javascript:history.go(-1)');  // 반드시 'javascript:'를 명시해주어야 한다.
 			
-			if ( document.referrer == '' || document.referrer == "http://localhost:8080/" )  // 홈페이지에서 조회한 경우, 또는 '최근 본 목록'의 새 창에서 돌아가는 경우 홈페이지로 귀환
-				window.location.href = " http://localhost:8080/"; 
-			else 
-				window.location.href = "/product/listProduct/search";
+			// 새 창이 아니면 이전 page로
+			if(window.history.length == 0) {
+				history.go(-1);
+			} else {
+				// 이전 page url로 이동
+				window.location.href = document.referrer;
+			}
 		}).on('mouseover', function() {
 			$(this).css('cursor', 'pointer');
 		}).on('mouseout', function() {
