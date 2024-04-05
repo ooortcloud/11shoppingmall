@@ -16,7 +16,7 @@
 	<c:set var="historyNo" value="${ historyNo}" />
 	<c:set var="i" value="0" />
 	<c:forEach var="history" items="${histories }">
-			<a href="/product/getProduct?prodNo=${historyNo[i] }&menu=search"	target="rightFrame">${history }</a>
+			<a href="/product/getProduct/search?prodNo=${historyNo[i] }"	target="rightFrame">${history }</a>
 			<br/>
 			<c:set var="i" value="${i+1 }" />
 	</c:forEach>

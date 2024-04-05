@@ -25,10 +25,18 @@
    
    
    <!-- jQuery UI toolTip 사용 CSS-->
-  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
   <!-- jQuery UI toolTip 사용 JS-->
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <!-- <link rel="stylesheet" href="/css/admin.css" type="text/css">  -->
+
+	<!--  CSS 추가 : 툴바에 화면 가리는 현상 해결 :  주석처리 전, 후 확인-->
+	<style>
+        body {
+            padding-top : 70px;
+            padding-botton : 30px;
+        }
+   	</style>
 
 <script type="text/javascript">
 	function fncGetPurchaseList() {
@@ -61,12 +69,6 @@
 	});
 </script>
  -->
- 	<!--  ///////////////////////// CSS ////////////////////////// -->
-	<style>
-	  body {
-            padding-top : 70px;
-        }
-    </style>
     
 </head>
 
@@ -75,70 +77,49 @@
 <jsp:include page="/layout/toolbar.jsp"/>
 
 <div class="container">
-	<div style="width: 98%; margin-left: 10px;">
 	
 	<form name="detailForm" action="/purchase/listPurchase" method="post">
 	
-	<input type="hidden" id="currentPage" name="currentPage" value="${resultPage.currentPage }" />
-	
-	검색 :: <input type="text" id="searchKeyword" name="searchKeyword" value="${search.searchKeyword }" />
-	
-	<table width="100%" height="37" border="0" cellpadding="0"	cellspacing="0">
-		<tr>
-			<td width="15" height="37"><img src="/images/ct_ttl_img01.gif"width="15" height="37"></td>
-			<td background="/images/ct_ttl_img02.gif" width="100%" style="padding-left: 10px;">
-				<table width="100%" border="0" cellspacing="0" cellpadding="0">
-					<tr>
-						<td width="93%" class="ct_ttl01">구매 목록조회</td>
-					</tr>
-				</table>
-			</td>
-			<td width="12" height="37"><img src="/images/ct_ttl_img03.gif"	width="12" height="37"></td>
-		</tr>
-	</table>
-	
-	<table width="100%" border="0" cellspacing="0" cellpadding="0"	style="margin-top: 10px;">
-		<tr> 
-			<td colspan="11">전체 ${requestScope.resultPage.totalCount } 건수, 현재 ${resultPage.currentPage } 페이지</td>
-		</tr>
-		<tr>
-			<td class="ct_list_b" width="100">No</td>
-			<td class="ct_line02"></td>
-			<td class="ct_list_b" width="150">상품ID</td>
-			<td class="ct_line02"></td>
-			<td class="ct_list_b" width="150">상품명</td>
-			<td class="ct_line02"></td>
-			<td class="ct_list_b">구매일자</td>
-			<td class="ct_line02"></td>
-			<td class="ct_list_b">배송현황</td>
-			<td class="ct_line02"></td>
-			<td class="ct_list_b">정보수정</td>
-		</tr>
-		<tr>
-			<td colspan="11" bgcolor="808285" height="1"></td>
-		</tr>
-	
+		<input type="hidden" id="currentPage" name="currentPage" value="${resultPage.currentPage }" />
 		
-		<%-- 반복문을 통해 구매 리스트를 개별로 출력 --%>
-		<c:set var="no" value="${resultPage.totalCount - resultPage.pageSize * (resultPage.currentPage -1 ) }" />
-		
-		<c:forEach var="purchase" items="${requestScope.list }">
-			<tr class="ct_list_pop">
-				<td align="center">
-					${no }
-					<c:set var="no" value="${ no-1 }" />
-				</td>
-				<td></td>
-				<td align="left">
-					<a href="/product/getProduct?prodNo=${purchase.purchaseProd.prodNo }&menu=search" style="text-decoration:none"><strong>${purchase.purchaseProd.prodNo }</strong></a>
-				</td>
-				<td></td>
-				<td align="left">${purchase.purchaseProd.prodName }</td>
-				<td></td>
-				<td align="left">${purchase.orderDate }</td>
-				<td></td>
+		<div class='form-group'>
+			<label for='searchKeyword' class="col-sm-1 control-label"	>검색</label> 
+			<div class='col-sm-5'>
+				<input class='form-control' type="text" id="searchKeyword" name="searchKeyword" value="${search.searchKeyword }" />
+			</div>
+		</div>
+	</form>
+</div> <!-- container end -->	
+
+	<div class="container">
+		<div class="page-header">
+			<h2>구매 목록조회</h2>
+		</div>
+	</div>
+	
+
+<div class='container' id='searchList'>
+	<c:set var="num" value="${resultPage.totalCount - resultPage.pageSize * (resultPage.currentPage -1 ) }" />
+	<p>전체 ${requestScope.resultPage.totalCount } 건수, 현재 ${resultPage.currentPage } 페이지</p>
+	
+	<table class='table table-striped'>
+		<thead>
+			<th>No</th>
+			<th>상품ID</th>
+			<th>상품명</th>
+			<th>구매일자</th>
+			<th>배송현황</th>
+			<th>정보수정</th>
+		</thead>
+		<tbody>
+			<c:forEach var="purchase" items="${requestScope.list }">
+			<tr>
+				<th scope='row'>${num }</th>
+				<td><a href="/product/getProduct/search?prodNo=${purchase.purchaseProd.prodNo }">${purchase.purchaseProd.prodNo }</a></td>
+				<td>${purchase.purchaseProd.prodName }</td>
+				<td>${purchase.orderDate }</td>
 				<%-- tran_state_code : "1" = "구매완료", "2" = "배송중", "3" = "배송완료" --%>
-				<td align="left">
+				<td>
 					<c:if test="${ purchase.tranCode == 1 }">
 						현재 구매완료 상태입니다.
 					</c:if><c:if test="${ purchase.tranCode == 2 }">
@@ -147,36 +128,25 @@
 						현재 배송완료 상태 입니다.
 					</c:if>
 				</td>
-				<td></td>
-				<td align="left">
-					  
+				<td>
 					<c:if test="${purchase.tranCode == 1 }">
 						<!-- <span id="modifier1">구매 정보 확인 및 수정</span>  -->
-						<a href="/purchase/getPurchase?tranNo=${purchase.tranNo }" style="text-decoration: none;"><strong>구매 정보 확인 및 수정</strong></a> 
+						<a href="/purchase/getPurchase?tranNo=${purchase.tranNo }">구매 정보 확인 및 수정</a> 
 					</c:if><c:if test="${purchase.tranCode == 2 }">
 						<!-- <span id="modifier2">물건 도착 알리기</span>  -->
-						<a href="/purchase/updateTranCode?tranNo=${purchase.tranNo }&tranCode=3" style="text-decoration: none;"><strong>물건 도착 알리기</strong></a>   
+						<a href="/purchase/updateTranCode?tranNo=${purchase.tranNo }&tranCode=3">물건 도착 알리기</a>   
 					</c:if>
 				</td>
 			</tr>
+			<c:set var="num" value="${ num-1 }" />
 		</c:forEach>
-	</table>  
+		</tbody>
+	</table>
 </div> <!-- container end -->
+	
 
-<table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top: 10px;">
-	<tr>
-		<td align="center">
-		
-		<jsp:include page="../common/pageNavigator.jsp"></jsp:include>
-		  
-		</td>
-	</tr>
-</table>
 
-<!--  페이지 Navigator 끝 -->
-</form>
-
-</div>
+<jsp:include page="/common/pageNavigator.jsp"></jsp:include>
 
 </body>
 </html>
